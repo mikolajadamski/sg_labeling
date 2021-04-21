@@ -2,3 +2,5 @@
 *.iws
 *.iml
 *.ipr
+target/
+!**/src/test/**/target/
