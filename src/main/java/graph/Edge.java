@@ -2,13 +2,16 @@ package graph;
 
 import org.chocosolver.solver.variables.IntVar;
 
+import java.util.Objects;
+
 public class Edge {
     private Vertex v1;
     private Vertex v2;
-    private IntVar modelId;
+    private IntVar varId;
     private String id;
 
     public Edge (String id, Vertex v1, Vertex v2) {
+        this.id = id;
         this.v1 = v1;
         this.v2 = v2;
     }
@@ -17,12 +20,12 @@ public class Edge {
         return id;
     }
 
-    public IntVar getModelId() {
-        return modelId;
+    public IntVar getVarId() {
+        return varId;
     }
 
-    public void setModelId(IntVar modelId) {
-        this.modelId = modelId;
+    public void setVarId(IntVar varId) {
+        this.varId = varId;
     }
 
     public Vertex getV1() {
@@ -32,4 +35,5 @@ public class Edge {
     public Vertex getV2() {
         return v2;
     }
+
 }
