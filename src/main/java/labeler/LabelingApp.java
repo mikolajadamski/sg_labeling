@@ -11,33 +11,26 @@ public class LabelingApp {
 
     public static void main(String[] args){
         Graph graph = new Graph();
+        int n = 3;
+        String[] E = {"v1", "v2", "v2", "v3", "v3", "v4"};
 
-        graph.addVertex(new Vertex("v1"));
-        graph.addVertex(new Vertex("v2"));
-        graph.addVertex(new Vertex("v3"));
-        graph.addVertex(new Vertex("v4"));
-
-        graph.addEdge(new Edge("e1", graph.getVertex("v1"), graph.getVertex("v2")));
-        graph.addEdge(new Edge("e2", graph.getVertex("v2"), graph.getVertex("v3")));
-        graph.addEdge(new Edge("e3", graph.getVertex("v3"), graph.getVertex("v4")));
+        for(int i=0; i<=n; i++)
+            graph.addVertex(new Vertex("v"+String.valueOf(i+1)));
+        for(int i = 0, j=0; i<n; i++, j+=2)
+            graph.addEdge(new Edge("e" + String.valueOf(i+1), graph.getVertex(E[j]), graph.getVertex(E[j+1])));
 
         SkolemGracefulLabeler labeler = new SkolemGracefulLabeler();
-
         Solver solver = labeler.labelGraph(graph);
 
         if(solver.solve()){
             System.out.println("Solution: ");
             ArrayList<Vertex> vertices = graph.getVertices();
             ArrayList<Edge> edges = graph.getEdges();
-            for (Vertex vertex: vertices) {
+            for (Vertex vertex: vertices)
                 System.out.printf("Vertex %s\n",vertex.getVarId());
-            }
-            for (Edge edge: edges) {
+            for (Edge edge: edges)
                 System.out.printf("Edge %s\n",edge.getVarId());
-            }
         }
-        else{
-            System.out.println("No solution");
-        }
+        else System.out.println("No solution");
     }
 }

@@ -1,9 +1,7 @@
 package graph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.List;
 
 public class Graph {
     private Hashtable<String, Vertex> vertices;
@@ -13,7 +11,6 @@ public class Graph {
         vertices = new Hashtable<>();
         edges = new Hashtable<>();
     }
-
 
     public void addVertex(Vertex vertex){
         vertices.put(vertex.getId(),vertex);
