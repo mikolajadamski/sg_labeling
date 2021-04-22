@@ -1,9 +1,7 @@
-package graph;
+package app.graph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.List;
 
 public class Graph {
     private Hashtable<String, Vertex> vertices;

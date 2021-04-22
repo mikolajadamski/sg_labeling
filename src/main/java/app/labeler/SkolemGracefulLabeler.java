@@ -1,8 +1,8 @@
-package labeler;
+package app.labeler;
 
-import graph.Edge;
-import graph.Graph;
-import graph.Vertex;
+import app.graph.Edge;
+import app.graph.Graph;
+import app.graph.Vertex;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;

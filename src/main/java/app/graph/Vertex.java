@@ -1,4 +1,4 @@
-package graph;
+package app.graph;
 
 import org.chocosolver.solver.variables.IntVar;
 
