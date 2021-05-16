@@ -3,6 +3,17 @@ package app.openjfx;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
+
+import javax.swing.JFileChooser;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import app.labeler.SkolemGracefulLabeler;
+import app.graph.Edge;
+import app.graph.Graph;
+import app.graph.Vertex;
+import org.chocosolver.solver.Solver;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -26,79 +37,119 @@ public class PrimaryController {
 
     @FXML
     private void switchToSecondary() throws IOException {
+        clear();
         Random generator = new Random();
         int v = Integer.parseInt(vertices.getText());
         String e = edges.getText();
         String[] connections = e.split(",");
 
         if (v >= connections.length + 1) {
-            ArrayList<Integer> X = new ArrayList<Integer>();
-            ArrayList<Integer> Y = new ArrayList<Integer>();
+            Graph g = new Graph();
 
             for (int i = 0; i < v; i++) {
-                int x = generator.nextInt(670) + 30;
-                int y = generator.nextInt(360) + 30;
-                Rectangle rectangle = new Rectangle(x, y, 20, 20);
-                rectangle.setFill(Color.BLUE);
-                Text text = new Text('v' + String.valueOf(i));
-                text.setX(x);
-                text.setY(y + 10);
-                text.setFill(Color.WHITE);
-                graph.getChildren().add(rectangle);
-                graph.getChildren().add(text);
-                X.add(x);
-                Y.add(y);
+                g.addVertex(new Vertex("v" + String.valueOf(i)));
             }
 
-            for (String i : connections) {
-                String[] vertices = i.split("-");
-                vertices[0] = vertices[0].replace("v", "");
-                vertices[1] = vertices[1].replace("v", "");
+            for (int i = 1; i <= connections.length; i++) {
+                String[] vertices = connections[i - 1].split("-");
+                g.addEdge(new Edge("e" + String.valueOf(i), g.getVertex(vertices[0]), g.getVertex(vertices[1])));
+            }
 
-                int color = generator.nextInt(6);
+            SkolemGracefulLabeler l = new SkolemGracefulLabeler();
+            Solver solver = l.labelGraph(g);
 
-                Paint c = Color.AZURE;
-                switch (color) {
-                    case 0:
-                        c = Color.RED;
-                        break;
-                    case 1:
-                        c = Color.BLUE;
-                        break;
-                    case 2:
-                        c = Color.GREEN;
-                        break;
-                    case 3:
-                        c = Color.YELLOW;
-                        break;
-                    case 4:
-                        c = Color.PINK;
-                        break;
-                    case 5:
-                        c = Color.ORANGE;
-                        break;
-                    case 6:
-                        c = Color.PURPLE;
-                        break;
-                    default:
-                        break;
+            if (solver.solve()) {
+                ArrayList<Vertex> vert = g.getVertices();
+                ArrayList<Edge> edges = g.getEdges();
+
+                ArrayList<Integer> X = new ArrayList<Integer>();
+                ArrayList<Integer> Y = new ArrayList<Integer>();
+
+                for (int i = 0; i < v; i++) {
+                    int x = generator.nextInt(670) + 30;
+                    int y = generator.nextInt(360) + 30;
+                    Rectangle rectangle = new Rectangle(x, y, 30, 30);
+                    rectangle.setFill(Color.BLUE);
+                    Text text = new Text('v' + String.valueOf(i));
+                    text.setX(x);
+                    text.setY(y + 10);
+                    text.setFill(Color.WHITE);
+                    graph.getChildren().add(rectangle);
+                    graph.getChildren().add(text);
+                    X.add(x);
+                    Y.add(y);
+
+                    for (int j = 0; j < v; j++) {
+                        if (vert.get(j).getId().equals('v' + String.valueOf(i))) {
+                            Text text2 = new Text(String.valueOf(vert.get(j).getVarId().getValue()));
+                            text2.setX(x + 20);
+                            text2.setY(y + 25);
+                            text2.setFill(Color.WHITE);
+                            graph.getChildren().add(text2);
+                        }
+                    }
                 }
 
-                Line line = new Line();
-                line.setStartX(X.get(Integer.parseInt(vertices[0])));
-                line.setStartY(Y.get(Integer.parseInt(vertices[0])));
-                line.setEndX(X.get(Integer.parseInt(vertices[1])));
-                line.setEndY(Y.get(Integer.parseInt(vertices[1])));
-                line.setStroke(c);
-                graph.getChildren().add(line);
+                for (int i = 0; i < connections.length; i++) {
+                    String[] vertices = connections[i].split("-");
+                    vertices[0] = vertices[0].replace("v", "");
+                    vertices[1] = vertices[1].replace("v", "");
 
-                int s_x = (X.get(Integer.parseInt(vertices[0])) + X.get(Integer.parseInt(vertices[1]))) / 2;
-                int s_y = (Y.get(Integer.parseInt(vertices[0])) + Y.get(Integer.parseInt(vertices[1]))) / 2;
-                Text text = new Text("5");
-                text.setX(s_x);
-                text.setY(s_y - 10);
-                text.setFill(c);
-                graph.getChildren().add(text);
+                    int color = generator.nextInt(6);
+
+                    Paint c = Color.AZURE;
+                    switch (color) {
+                        case 0:
+                            c = Color.RED;
+                            break;
+                        case 1:
+                            c = Color.BLUE;
+                            break;
+                        case 2:
+                            c = Color.GREEN;
+                            break;
+                        case 3:
+                            c = Color.YELLOW;
+                            break;
+                        case 4:
+                            c = Color.PINK;
+                            break;
+                        case 5:
+                            c = Color.ORANGE;
+                            break;
+                        case 6:
+                            c = Color.PURPLE;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    Line line = new Line();
+                    line.setStartX(X.get(Integer.parseInt(vertices[0])));
+                    line.setStartY(Y.get(Integer.parseInt(vertices[0])));
+                    line.setEndX(X.get(Integer.parseInt(vertices[1])));
+                    line.setEndY(Y.get(Integer.parseInt(vertices[1])));
+                    line.setStroke(c);
+                    graph.getChildren().add(line);
+
+                    int s_x = (X.get(Integer.parseInt(vertices[0])) + X.get(Integer.parseInt(vertices[1]))) / 2;
+                    int s_y = (Y.get(Integer.parseInt(vertices[0])) + Y.get(Integer.parseInt(vertices[1]))) / 2;
+
+                    for (int j = 0; j < edges.size(); j++) {
+                        if ((('v' + vertices[0]).equals(edges.get(j).getV1().getId())
+                                && ('v' + vertices[1]).equals(edges.get(j).getV2().getId()))
+                                || (('v' + vertices[1]).equals(edges.get(j).getV1().getId())
+                                        && ('v' + vertices[0]).equals(edges.get(j).getV2().getId()))) {
+                            Text text = new Text(String.valueOf(edges.get(j).getVarId().getValue()));
+                            text.setX(s_x);
+                            text.setY(s_y - 10);
+                            text.setFill(c);
+                            graph.getChildren().add(text);
+
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -107,6 +158,34 @@ public class PrimaryController {
     private void clear() throws IOException {
         graph.getChildren().clear();
     }
-}
 
-// v0-v1,v1-v4,v1-v5,v1-v2,v2-v3
+    @FXML
+    private void loadGraph() throws IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(fileChooser);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            try {
+                String data = "";
+                File myObj = new File(selectedFile.getAbsolutePath());
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextLine()) {
+                    data += myReader.nextLine();
+                }
+                myReader.close();
+
+                String[] elements = data.split("|");
+                String numberOfVertices = elements[0];
+                String e = data.replace(numberOfVertices + "|", "");
+
+                vertices.setText(numberOfVertices);
+                edges.setText(e);
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        }
+    }
+}
