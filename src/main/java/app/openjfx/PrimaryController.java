@@ -99,34 +99,7 @@ public class PrimaryController {
                     vertices[0] = vertices[0].replace("v", "");
                     vertices[1] = vertices[1].replace("v", "");
 
-                    int color = generator.nextInt(6);
-
-                    Paint c = Color.AZURE;
-                    switch (color) {
-                        case 0:
-                            c = Color.RED;
-                            break;
-                        case 1:
-                            c = Color.BLUE;
-                            break;
-                        case 2:
-                            c = Color.GREEN;
-                            break;
-                        case 3:
-                            c = Color.YELLOW;
-                            break;
-                        case 4:
-                            c = Color.PINK;
-                            break;
-                        case 5:
-                            c = Color.ORANGE;
-                            break;
-                        case 6:
-                            c = Color.PURPLE;
-                            break;
-                        default:
-                            break;
-                    }
+                    Paint c = Color.PURPLE;
 
                     Line line = new Line();
                     line.setStartX(X.get(Integer.parseInt(vertices[0])));
