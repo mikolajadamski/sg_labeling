@@ -13,6 +13,10 @@ import app.labeler.SkolemGracefulLabeler;
 import app.graph.Edge;
 import app.graph.Graph;
 import app.graph.Vertex;
+import javafx.scene.control.Alert;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.chocosolver.solver.Solver;
 
 import javafx.fxml.FXML;
@@ -41,7 +45,7 @@ public class PrimaryController {
         Random generator = new Random();
         int v = Integer.parseInt(vertices.getText());
         String e = edges.getText();
-        String[] connections = e.split(",");
+        String[] connections = e.replaceAll("\\s+","").split(",");
 
         if (v >= connections.length + 1) {
             Graph g = new Graph();
@@ -68,13 +72,13 @@ public class PrimaryController {
                 for (int i = 0; i < v; i++) {
                     int x = generator.nextInt(670) + 30;
                     int y = generator.nextInt(360) + 30;
-                    Rectangle rectangle = new Rectangle(x, y, 30, 30);
-                    rectangle.setFill(Color.BLUE);
+                    Circle circle = new Circle(x, y, 20);
+                    circle.setFill(Color.YELLOWGREEN);
                     Text text = new Text('v' + String.valueOf(i));
+                    text.setFont(Font.font("Consolas",FontWeight.BOLD, 16));
                     text.setX(x);
                     text.setY(y + 10);
-                    text.setFill(Color.WHITE);
-                    graph.getChildren().add(rectangle);
+                    graph.getChildren().add(circle);
                     graph.getChildren().add(text);
                     X.add(x);
                     Y.add(y);
@@ -82,9 +86,9 @@ public class PrimaryController {
                     for (int j = 0; j < v; j++) {
                         if (vert.get(j).getId().equals('v' + String.valueOf(i))) {
                             Text text2 = new Text(String.valueOf(vert.get(j).getVarId().getValue()));
-                            text2.setX(x + 20);
-                            text2.setY(y + 25);
-                            text2.setFill(Color.WHITE);
+                            text2.setX(x);
+                            text2.setY(y - 10);
+                            text2.setFont(Font.font("Consolas",FontWeight.BOLD, 16));
                             graph.getChildren().add(text2);
                         }
                     }
@@ -143,6 +147,7 @@ public class PrimaryController {
                             Text text = new Text(String.valueOf(edges.get(j).getVarId().getValue()));
                             text.setX(s_x);
                             text.setY(s_y - 10);
+                            text.setFont(Font.font("Consolas",FontWeight.BOLD, 16));
                             text.setFill(c);
                             graph.getChildren().add(text);
 
@@ -151,6 +156,12 @@ public class PrimaryController {
 
                 }
             }
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Kolorowanie Skolem-Graceful");
+            alert.setHeaderText("Podanego grafu nie można pokolorować metodą Skolem-Graceful");
+            alert.showAndWait();
         }
     }
 
