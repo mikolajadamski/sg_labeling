@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 public class SkolemGracefulLabeler {
 
-    SkolemGracefulLabeler(){
+    public SkolemGracefulLabeler() {
     }
 
-    public Solver labelGraph(Graph graph){
+    public Solver labelGraph(Graph graph) {
         Model model = new Model("SkolemGracefulLabeler");
 
         ArrayList<Vertex> vertices = graph.getVertices();
@@ -25,32 +25,31 @@ public class SkolemGracefulLabeler {
         IntVar[] varEdges = new IntVar[edges.size()];
 
         vertices.forEach(vertex -> {
-            vertex.setVarId(model.intVar(vertex.getId(),0, numberOfEdges));
+            vertex.setVarId(model.intVar(vertex.getId(), 0, numberOfEdges));
         });
 
         edges.forEach(edge -> {
-            edge.setVarId(model.intVar(edge.getId(),1, numberOfEdges));
+            edge.setVarId(model.intVar(edge.getId(), 1, numberOfEdges));
             setEdgeRules(edge, model);
         });
 
-        for (int i=0; i<vertices.size(); i++) {
+        for (int i = 0; i < vertices.size(); i++) {
             varVertices[i] = vertices.get(i).getVarId();
         }
 
-        for (int i=0; i<edges.size(); i++) {
+        for (int i = 0; i < edges.size(); i++) {
             varEdges[i] = edges.get(i).getVarId();
         }
-
 
         model.allDifferent(varVertices).post();
         model.allDifferent(varEdges).post();
 
         return model.getSolver();
     }
-    private void setEdgeRules(Edge edge, Model model){
 
-        model.or(model.arithm(edge.getV1().getVarId(),"-", edge.getV2().getVarId(), "=", edge.getVarId()),
-                model.arithm(edge.getV2().getVarId(),"-", edge.getV1().getVarId(), "=", edge.getVarId()))
-                .post();
+    private void setEdgeRules(Edge edge, Model model) {
+
+        model.or(model.arithm(edge.getV1().getVarId(), "-", edge.getV2().getVarId(), "=", edge.getVarId()),
+                model.arithm(edge.getV2().getVarId(), "-", edge.getV1().getVarId(), "=", edge.getVarId())).post();
     }
 }
