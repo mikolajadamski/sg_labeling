@@ -13,7 +13,8 @@
       <Label layoutX="26.0" layoutY="24.0" text="How many vertices? " />
       <Label layoutX="208.0" layoutY="24.0" prefHeight="17.0" prefWidth="194.0" text="Enter connections between vertices:" />
       <Button layoutX="734.0" layoutY="20.0" mnemonicParsing="false" onAction="#switchToSecondary" text="Color" />
-      <Button layoutX="439.0" layoutY="525.0" mnemonicParsing="false" onAction="#clear" text="Clear" />
-      <Button layoutX="323.0" layoutY="525.0" mnemonicParsing="false" onAction="#loadGraph" text="Load Graph" />
+      <Button layoutX="493.0" layoutY="528.0" mnemonicParsing="false" onAction="#clear" text="Clear" />
+      <Button layoutX="377.0" layoutY="528.0" mnemonicParsing="false" onAction="#loadGraph" text="Load Graph" />
+      <Button layoutX="265.0" layoutY="528.0" mnemonicParsing="false" onAction="#saveGraph" text="Save Graph" />
    </children>
 </Pane>

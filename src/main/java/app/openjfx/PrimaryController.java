@@ -6,8 +6,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 import app.labeler.SkolemGracefulLabeler;
 import app.graph.Edge;
@@ -45,7 +48,7 @@ public class PrimaryController {
         Random generator = new Random();
         int v = Integer.parseInt(vertices.getText());
         String e = edges.getText();
-        String[] connections = e.replaceAll("\\s+","").split(",");
+        String[] connections = e.replaceAll("\\s+", "").split(",");
 
         if (v >= connections.length + 1) {
             Graph g = new Graph();
@@ -75,7 +78,7 @@ public class PrimaryController {
                     Circle circle = new Circle(x, y, 20);
                     circle.setFill(Color.YELLOWGREEN);
                     Text text = new Text('v' + String.valueOf(i));
-                    text.setFont(Font.font("Consolas",FontWeight.BOLD, 16));
+                    text.setFont(Font.font("Consolas", FontWeight.BOLD, 16));
                     text.setX(x);
                     text.setY(y + 10);
                     graph.getChildren().add(circle);
@@ -88,7 +91,7 @@ public class PrimaryController {
                             Text text2 = new Text(String.valueOf(vert.get(j).getVarId().getValue()));
                             text2.setX(x);
                             text2.setY(y - 10);
-                            text2.setFont(Font.font("Consolas",FontWeight.BOLD, 16));
+                            text2.setFont(Font.font("Consolas", FontWeight.BOLD, 16));
                             graph.getChildren().add(text2);
                         }
                     }
@@ -120,7 +123,7 @@ public class PrimaryController {
                             Text text = new Text(String.valueOf(edges.get(j).getVarId().getValue()));
                             text.setX(s_x);
                             text.setY(s_y - 10);
-                            text.setFont(Font.font("Consolas",FontWeight.BOLD, 16));
+                            text.setFont(Font.font("Consolas", FontWeight.BOLD, 16));
                             text.setFill(c);
                             graph.getChildren().add(text);
 
@@ -129,8 +132,7 @@ public class PrimaryController {
 
                 }
             }
-        }
-        else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Kolorowanie Skolem-Graceful");
             alert.setHeaderText("Podanego grafu nie można pokolorować metodą Skolem-Graceful");
@@ -170,6 +172,28 @@ public class PrimaryController {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
             }
+        }
+    }
+
+    @FXML
+    private void saveGraph() throws IOException {
+        JFrame parentFrame = new JFrame();
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Specify a file to save");
+
+        int userSelection = fileChooser.showSaveDialog(parentFrame);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            try {
+                FileWriter myWriter = new FileWriter(fileChooser.getSelectedFile());
+                myWriter.write(vertices.getText() + "|" + edges.getText());
+                myWriter.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+
         }
     }
 }
