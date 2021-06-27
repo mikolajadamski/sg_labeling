@@ -19,13 +19,14 @@ public class SkolemGracefulLabeler {
 
         ArrayList<Vertex> vertices = graph.getVertices();
         ArrayList<Edge> edges = graph.getEdges();
+        int numberOfVertices = vertices.size();
         int numberOfEdges = edges.size();
 
         IntVar[] varVertices = new IntVar[vertices.size()];
         IntVar[] varEdges = new IntVar[edges.size()];
 
         vertices.forEach(vertex -> {
-            vertex.setVarId(model.intVar(vertex.getId(), 0, numberOfEdges));
+            vertex.setVarId(model.intVar(vertex.getId(), 1, numberOfVertices));
         });
 
         edges.forEach(edge -> {
